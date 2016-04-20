@@ -24,7 +24,7 @@ int g = 1, clk = 3, ser_in = 4;
 #define PWMclr 0  //PWMA disabled
 #define PWMset 1  //PWMA enabled
 #define COMA 2    //PWM Set to Clear on OCR and set on 0 (after OCRC)
-#define CS 11     //Prescaler set to CLK/1024 (with OCRC=255 it means a 32 Hz PWM) (with other OCRC values it's 8kHz/(OCRC + 1)
+#define CS 12     //Prescaler set to CLK/1024 (with OCRC=255 it means a 32 Hz PWM) (with other OCRC values it's 8kHz/(OCRC + 1)
 #define PWMB 0    //PWMB disabled
 #define COMB 0    //OCRB disconnected
 #define FOC 0     //Force compare disabled
