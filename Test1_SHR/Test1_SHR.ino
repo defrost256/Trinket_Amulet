@@ -18,15 +18,21 @@
   * 3. Set PWM Compare->TCCR0A (0x2A) = 00100001
   */
 
- int g = 1, clk = 3, ser_in = 4;
+int g = 1, clk = 3, ser_in = 4;
 
- #define COM0A 0  //NORMAL OC0A Port operation
- #define COM0B 2  //Clear OC0B on up Match, Set OC0B on down Match
- #define WGM 5    //PWM Phase Correct with OCRA as TOP
- #define FOC 0    //No Forced OCR
- #define CS 5     //8MHz/1024 Prescale
- #define OCRA 51  //20% fill
- #define OCRB 51  //20% fill
+#define CTC 0     //No clear on OCR
+#define PWMclr 0  //PWMA disabled
+#define PWMset 1  //PWMA enabled
+#define COMA 2    //PWM Set to Clear on OCR and set on 0 (after OCRC)
+#define CS 11     //Prescaler set to CLK/1024 (with OCRC=255 it means a 32 Hz PWM) (with other OCRC values it's 8kHz/(OCRC + 1)
+#define PWMB 0    //PWMB disabled
+#define COMB 0    //OCRB disconnected
+#define FOC 0     //Force compare disabled
+#define PSR 0     //No prescaler reset
+#define OCRA 51   //20% fill
+#define OCRC 255  //Full time PWM
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -34,11 +40,10 @@ void setup() {
   pinMode(clk, OUTPUT);
   pinMode(ser_in, OUTPUT);
   DDRB |= (1 << DDB1);
-  TCCR0A = WGM & 3;
-  TCCR0B = ((WGM >> 2) << 3) | CS | (FOC << 6);
-  OCR0A = OCRA;
-  OCR0B = OCRB;
-  TCCR0A = (WGM & 3) | (COM0A << 6) | (COM0B << 4);
+  TCCR1 = (CTC << 7) | (PWMset << 6) | (COMA << 4) | CS;
+  GTCCR = (PWMB << 6) | (COMB << 4) | (FOC << 2) | (PSR << 1);
+  OCR1A = OCRA;
+  OCR1C = OCRC;
 }
 
 void loop() {
